@@ -1,25 +1,25 @@
 import styled from "styled-components";
 import logo from "../assets/img/logo.png";
-export default function Login() {
+export default function Join() {
   return (
     <div>
-      <LoginWrap>
+      <JoinWrap>
         <Logo img src={logo} alt="로고이미지" />
 
         {/* 아아디, 비번 입력 */}
         <InputWrap>
-          <LoginInput placeholder="아이디를 입력하세요" />
-          <LoginInput placeholder="비밀번호를 입력하세요" />
+          <JoinInput placeholder="아이디를 입력하세요" />
+          <JoinInput placeholder="비밀번호를 입력하세요" />
         </InputWrap>
         {/* 로그인 버튼 */}
-        <LoginBtn>로그인</LoginBtn>
-        {/* 회원가입으로 넘어가기 */}
-        <JoinMove>회원가입 하러가기</JoinMove>
-      </LoginWrap>
+        <JoinBtn>회원가입</JoinBtn>
+        {/* 로그인으로 넘어가기 */}
+        <LoginMove>로그인 하러가기</LoginMove>
+      </JoinWrap>
     </div>
   );
 }
-const LoginWrap = styled.section`
+const JoinWrap = styled.section`
   background-color: white;
   padding: 50px;
   border-radius: 20px;
@@ -37,7 +37,7 @@ const InputWrap = styled.section`
   display: flex;
   flex-direction: column;
 `;
-const LoginInput = styled.input`
+const JoinInput = styled.input`
   width: 250px;
   height: 50px;
   color: #4e6466;
@@ -49,7 +49,7 @@ const LoginInput = styled.input`
   border: none;
   border-radius: 10px;
 `;
-const LoginBtn = styled.button`
+const JoinBtn = styled.button`
   width: 250px;
   height: 50px;
   background-color: #c3e1e3;
@@ -59,7 +59,7 @@ const LoginBtn = styled.button`
   font-size: 20px;
   font-weight: 700;
 `;
-const JoinMove = styled.p`
+const LoginMove = styled.p`
   color: #4e6466;
   text-align: center;
   font-size: 20px;
