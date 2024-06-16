@@ -50,11 +50,15 @@ export default function Calendar() {
       setCurrentMonth(currentMonth + 1);
     }
   };
+  // const TodayDate = `${today.getFullYear()}년 ${
+  //   today.getMonth() + 1
+  // }월 ${today.getDate()}일`;
 
   return (
     <CalendarWrap>
       <CalendarHeader>
         <CalendarHeaderCenter>
+          {/* {TodayDate} */}
           <CurrentYear>{`${currentYear}년`}</CurrentYear>
           <CurrentMonth>{`${currentMonth + 1}월`}</CurrentMonth>
           <MonthChangeBtn onClick={prevMonth}>
@@ -91,7 +95,6 @@ const CalendarWrap = styled.section`
   flex-direction: column;
   align-items: center;
 `;
-
 const CalendarHeader = styled.div`
   display: flex;
   align-items: flex-start;
@@ -197,3 +200,7 @@ const DateElement = styled.div`
 const EmptyDate = styled.div`
   width: calc(100% / 7);
 `;
+
+// const Today = styled.section`
+//   background: #000;
+// `;
