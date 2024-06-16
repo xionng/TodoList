@@ -1,8 +1,9 @@
 import styled from "styled-components";
+import TodoListGet from "./TodoListGet";
 export default function TodoEdit() {
   return (
     <EditWrap>
-      <p>투두리스트 추가,수정</p>
+      <TodoListGet />
     </EditWrap>
   );
 }
