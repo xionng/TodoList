@@ -110,6 +110,8 @@ const EditBtn = styled.button`
   font-size: 12px;
   width: 55px;
   height: 40px;
+  color: #f5fffe;
+  font-weight: 700;
 `;
 const DelBtn = styled.button`
   border-radius: 10px;
@@ -118,6 +120,7 @@ const DelBtn = styled.button`
   font-size: 12px;
   width: 55px;
   height: 40px;
+  font-weight: 700;
 `;
 
 TodoItem.propTypes = {

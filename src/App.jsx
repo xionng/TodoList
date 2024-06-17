@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Signup from "./pages/Signup";
+import Signup from "./pages/Signup"; /* signUp->signup 이름 바꿈*/
 import Mypage from "./pages/Mypage";
 import Main from "./pages/Main";
 

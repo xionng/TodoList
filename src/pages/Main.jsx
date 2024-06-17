@@ -7,7 +7,7 @@ import { useState } from "react";
 export default function Main() {
   const [todoList, setTodoList] = useState([]);
   return (
-    <div>
+    <MainWrap>
       <MainTop>
         <Calendar />
         <EditWrap>
@@ -22,10 +22,18 @@ export default function Main() {
           checkedList={false}
         ></TodoItemList>
       </ListWrap>
-    </div>
+    </MainWrap>
   );
 }
-
+const MainWrap = styled.section`
+  width: 100wh;
+  height: 100vh;
+  padding-left: 155px;
+  padding-right: 155px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 const MainTop = styled.section`
   display: flex;
 `;

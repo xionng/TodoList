@@ -5,7 +5,8 @@ export const Wrapper = styled.div`
   padding: 50px;
   border-radius: 20px;
   border: 10px solid #c3e1e3;
-
+  width: 350px;
+  height: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,9 +54,39 @@ export const Input = styled.input`
 `;
 export const Logo = styled.img`
   width: 200px;
-  margin-bottom: 20px;
+  margin-top: 50px;
+  margin-bottom: 40px;
+`;
+export const LoginWrap = styled.section`
+  width: 100%;
+  height: 100%;
+  padding-left: 260px;
+  padding-right: 260px;
+  display: flex;
+  justify-content: center;
+`;
+export const Button = styled.button`
+  width: 250px;
+  height: 50px;
+  background-color: #c3e1e3;
+  color: #4e6466;
+
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
 `;
 
+export const SpringSection = styled.div`
+  position: absolute;
+  top: 95px;
+  width: 430px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+`;
+export const Spring = styled.img`
+  width: 25px;
+`;
 // 투두리스트 입력
 export const Wrap = styled.section`
   display: flex;
