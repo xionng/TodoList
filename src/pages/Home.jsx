@@ -13,8 +13,21 @@ import {
 } from "../components/common.js";
 import { Link } from "react-router-dom";
 import spring from "../assets/img/spring.png";
+import { useState } from "react";
 
 export default function Home() {
+  const [inputId, setInputId] = useState("");
+  const [inputPw, setInputPw] = useState("");
+
+  const saveUserId = (e) => {
+    setInputId(e.target.value);
+  };
+  const saveUserPw = (e) => {
+    setInputPw(e.target.value);
+  };
+  const gotoMain = () => {
+    window.location.href = "/main";
+  };
   return (
     <>
       <LoginWrap>
@@ -22,10 +35,32 @@ export default function Home() {
           <Logo img src={logo} alt="로고이미지" />
           <Form>
             <Inputs>
-              <Input placeholder="아이디를 입력하세요" />
-              <Input placeholder="비밀번호를 입력하세요" type="password" />
+              <Input
+                name="id"
+                value={inputId}
+                onChange={(e) => {
+                  saveUserId(e);
+                }}
+                placeholder="아이디를 입력하세요"
+              />
+              <Input
+                name="pw"
+                value={inputPw}
+                onChange={(e) => {
+                  saveUserPw(e);
+                }}
+                placeholder="비밀번호를 입력하세요"
+                type="password"
+              />
             </Inputs>
-            <Button to="/main">로그인하기</Button>
+
+            {inputId.length > 1 && inputPw.length > 1 ? (
+              <Button onClick={gotoMain} disabled={false}>
+                로그인하기
+              </Button>
+            ) : (
+              <Button disabled={true}>로그인하기</Button>
+            )}
           </Form>
           <CustomLink to="/signup">회원가입 하러가기</CustomLink>
         </Wrapper>
