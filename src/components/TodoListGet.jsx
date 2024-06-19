@@ -1,3 +1,4 @@
+// 투두리스트 입력받기
 import { Wrap, GetWrap, ListGet, InputBtn } from "./common.js";
 import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";

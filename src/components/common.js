@@ -11,6 +11,8 @@ export const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: white;
+  position: absolute;
+  top: 115px;
 `;
 
 export const Inputs = styled.div`
@@ -58,12 +60,11 @@ export const Logo = styled.img`
   margin-bottom: 40px;
 `;
 export const LoginWrap = styled.section`
-  width: 100%;
-  height: 100%;
   padding-left: 260px;
   padding-right: 260px;
   display: flex;
   justify-content: center;
+  width: 1000px;
 `;
 export const Button = styled.button`
   width: 250px;

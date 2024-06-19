@@ -1,3 +1,4 @@
+// 투두리스트 내용 모음
 import TodoItem from "./TodoItem";
 import styled from "styled-components";
 import PropTypes from "prop-types";

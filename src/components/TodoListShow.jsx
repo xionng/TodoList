@@ -1,3 +1,4 @@
+// 투두리스트 보여주기 전체 부분(제목 + 내용 목록)
 import styled from "styled-components";
 import TodoItemList from "./TodoItemList";
 import React, { useState } from "react";
