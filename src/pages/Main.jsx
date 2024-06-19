@@ -1,3 +1,4 @@
+import React from "react";
 import Calendar from "../components/Calendar";
 import TodoItemList from "../components/TodoItemList";
 import TodoListGet from "../components/TodoListGet";
@@ -26,8 +27,8 @@ export default function Main() {
   );
 }
 const MainWrap = styled.section`
-  width: 100wh;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   padding-left: 155px;
   padding-right: 155px;
   display: flex;

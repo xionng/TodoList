@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import logo from "../assets/img/logo.png";
 import {
@@ -14,7 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import spring from "../assets/img/spring.png";
 
-export default function Signup() {
+export default function SignUp() {
   return (
     <>
       <LoginWrap>
@@ -31,6 +32,7 @@ export default function Signup() {
         </Wrapper>
         <SpringSection>
           <Spring img src={spring} alt="스프링" />
+
           <Spring img src={spring} alt="스프링" />
           <Spring img src={spring} alt="스프링" />
           <Spring img src={spring} alt="스프링" />
