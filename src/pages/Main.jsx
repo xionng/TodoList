@@ -1,6 +1,6 @@
 // 달력, 투두리스트 메인 페이지
 import React from "react";
-import Calendar from "../components/Calendar";
+import Calendar from "../components/CalendarSection";
 import TodoItemList from "../components/TodoItemList";
 import TodoListGet from "../components/TodoListGet";
 import styled from "styled-components";

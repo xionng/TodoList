@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import styled from 'styled-components';
-import 'react-calendar/dist/Calendar.css';
+import React, { useState } from "react";
+import Calendar from "react-calendar";
+import styled from "styled-components";
+import "react-calendar/dist/Calendar.css";
 
-export default function Mypage() {
+export default function CalendarSection() {
   const [value, setValue] = useState(new Date());
 
-  const changeDate = date => {
+  const changeDate = (date) => {
     setValue(date); // 선택된 마지막 날짜로 상태 업데이트
   };
 
   const tileClassName = ({ date }) => {
     if (date.getDay() === 6) {
-      return 'saturday';
+      return "saturday";
     }
     if (date.getDay() === 0) {
-      return 'sunday';
+      return "sunday";
     }
-    return '';
+    return "";
   };
 
   return (
@@ -26,7 +26,9 @@ export default function Mypage() {
         locale="en"
         onChange={changeDate}
         value={value}
-        formatDay={(value, date) => date.toLocaleString('en', { day: 'numeric' })}
+        formatDay={(value, date) =>
+          date.toLocaleString("en", { day: "numeric" })
+        }
         tileClassName={tileClassName}
         showNeighboringMonth={false}
         selectRange={false}
@@ -50,7 +52,7 @@ export const CalendarWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-/* 헤더바 */
+  /* 헤더바 */
   .react-calendar__navigation {
     display: flex;
     align-items: center;
@@ -92,11 +94,11 @@ export const CalendarWrap = styled.div`
 
   /* 요일 이름 변경
   .react-calendar__month-view__weekdays__weekday--saturday abbr {
-    color: #6560ff; 
+    color: color: rgb(148, 191, 255); ; 
   }
 
   .react-calendar__month-view__weekdays__weekday--sunday abbr {
-    color: #ff8349; 
+    color: rgb(255, 148, 148); 
   }
 */
   /* 날짜 */
@@ -114,24 +116,24 @@ export const CalendarWrap = styled.div`
   .react-calendar__tile--active,
   .react-calendar__tile:enabled:focus {
     border: #4e6466;
-    background-color: #e6f1f1;
+    background-color: #c3e1e3;
   }
 
   .react-calendar__tile:enabled:hover {
     border: 1px solid #4e6466;
     background-color: #fff;
   }
-/* 날짜 요일 별 */
+  /* 날짜 요일 별 */
   .react-calendar__tile.saturday {
-    color: #6560ff;
+    color: rgb(148, 191, 255);
   }
 
   .react-calendar__tile.sunday {
-    color: #ff8349;
+    color: rgb(255, 148, 148);
   }
-
+  /* 오늘 날짜 */
   .react-calendar__tile--now {
-    background: #c3e1e3;
+    background: #e6f1f1;
     color: #4e6466;
   }
 `;

@@ -1,5 +1,3 @@
-// 회원가입 페이지
-import React from "react";
 import styled from "styled-components";
 import logo from "../assets/img/logo.png";
 import {
@@ -16,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import spring from "../assets/img/spring.png";
 
-export default function SignUp() {
+export default function Signup() {
   return (
     <>
       <LoginWrap>
@@ -33,7 +31,6 @@ export default function SignUp() {
         </Wrapper>
         <SpringSection>
           <Spring img src={spring} alt="스프링" />
-
           <Spring img src={spring} alt="스프링" />
           <Spring img src={spring} alt="스프링" />
           <Spring img src={spring} alt="스프링" />
