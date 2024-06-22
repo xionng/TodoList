@@ -19,7 +19,7 @@ export default function Signup() {
     <>
       <LoginWrap>
         <Wrapper>
-          <Logo img src={logo} alt="로고이미지" />
+          <Logo src={logo} alt="로고이미지" />
           <Form>
             <Inputs>
               <Input placeholder="아이디를 입력하세요" />
@@ -30,15 +30,15 @@ export default function Signup() {
           <CustomLink to="/">로그인 하러가기</CustomLink>
         </Wrapper>
         <SpringSection>
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
-          <Spring img src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
+          <Spring src={spring} alt="스프링" />
         </SpringSection>
       </LoginWrap>
     </>
