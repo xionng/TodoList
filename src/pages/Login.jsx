@@ -29,7 +29,7 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await axios.post(`${VITE_BASE_URL}/api/users/login`, {
+      const response = await axios.post(`${BASE_URL}/api/users/login`, {
         username,
         password,
       });
