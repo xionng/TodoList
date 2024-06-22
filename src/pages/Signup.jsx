@@ -19,13 +19,11 @@ import axios from "axios";
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError("");
+    // event.preventDefault();
 
     try {
       const response = await axios.post(`${BASE_URL}/api/users/register`, {
@@ -33,18 +31,11 @@ export default function Signup() {
         password,
       });
 
-      // 서버에서 받은 데이터 확인
-      console.log(response.data);
-
-      // 서버에서 받은 응답을 기반으로 처리
-      if (response.data.success) {
+      if (response.status === 200) {
         navigate("/");
-      } else {
-        setError("회원가입에 실패했습니다. 다시 시도해 주세요.");
       }
     } catch (error) {
-      console.error(error);
-      setError("회원가입에 실패했습니다. 다시 시도해 주세요.");
+      console.log(error);
     }
   };
 
@@ -73,7 +64,6 @@ export default function Signup() {
             </Inputs>
             <Button type="submit">회원가입하기</Button>
           </Form>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
           <CustomLink to="/">로그인 하러가기</CustomLink>
         </Wrapper>
         <SpringSection>
@@ -105,9 +95,4 @@ const CustomLink = styled(Link)`
     font-size: 20px;
     font-weight: 400;
   }
-`;
-
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 14px;
 `;
