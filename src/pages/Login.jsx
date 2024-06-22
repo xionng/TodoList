@@ -21,6 +21,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   // 로그인 버튼 눌렀을 때
   const handleSubmit = async (event) => {
@@ -28,7 +29,7 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await axios.post("/api/users/login", {
+      const response = await axios.post(`${VITE_BASE_URL}/api/users/login`, {
         username,
         password,
       });
