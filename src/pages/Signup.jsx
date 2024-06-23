@@ -23,20 +23,17 @@ export default function Signup() {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const handleSubmit = async (event) => {
-    // event.preventDefault();
-
+    event.preventDefault();
+    navigate("/");
     try {
       const response = await axios.post(`${BASE_URL}/api/users/register`, {
-        username,
-        password,
+        username: username,
+        password: password,
       });
-
-      if (response.status === 200) {
-        navigate("/");
-      }
     } catch (error) {
       console.log(error);
     }
+    navigate("/");
   };
 
   return (
@@ -44,7 +41,7 @@ export default function Signup() {
       <LoginWrap>
         <Wrapper>
           <Logo src={logo} alt="로고이미지" />
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Inputs>
               <Input
                 name="username"
@@ -62,7 +59,19 @@ export default function Signup() {
                 type="password"
               />
             </Inputs>
-            <Button type="submit">회원가입하기</Button>
+            {username.length > 0 && password.length > 0 ? (
+              <Button
+                type="submit"
+                disabled={false}
+                onClick={(e) => {
+                  handleSubmit(e);
+                }}
+              >
+                회원가입하기
+              </Button>
+            ) : (
+              <Button disabled={true}>회원가입하기</Button>
+            )}
           </Form>
           <CustomLink to="/">로그인 하러가기</CustomLink>
         </Wrapper>

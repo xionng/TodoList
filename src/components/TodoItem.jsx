@@ -1,141 +1,157 @@
-// 투두리스트 내용(한 줄)
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import PropTypes from "prop-types";
-import React, { useState, useRef } from "react";
 
-const TodoItem = ({ todoItem, todoList, setTodoList }) => {
-  const [edited, setEdited] = useState(false);
-  const [newText, setNewText] = useState(todoItem.text);
-  const editInputRef = useRef(null);
-
-  const onChangeCheckbox = () => {
-    const nextTodoList = todoList.map((item) => ({
-      ...item,
-      checked: item.id === todoItem.id ? !item.checked : item.checked,
-    }));
-    setTodoList(nextTodoList);
+const TodoItem = ({ todos, onDeleteTodo, onCompleteTodo }) => {
+  const [editTodoId, setEditTodoId] = useState(null);
+  const [editContent, setEditContent] = useState("");
+  // 수정
+  const handleEdit = (todo) => {
+    setEditTodoId(todo.todo_id);
+    setEditContent(todo.content);
+  };
+  // 수정(취소)
+  const handleCancelEdit = () => {
+    setEditTodoId(null);
+    setEditContent("");
+  };
+  // 수정(완료)
+  const handleSaveEdit = (todo_id) => {
+    handleCancelEdit(todo_id);
+  };
+  // 완료 체크
+  const handleComplete = (todo_id) => {
+    onCompleteTodo(todo_id);
   };
 
-  const onChangeEditInput = (e) => {
-    setNewText(e.target.value);
-  };
-
-  const onClickEditBtn = () => {
-    if (edited) {
-      const nextTodoList = todoList.map((item) =>
-        item.id === todoItem.id ? { ...item, text: newText } : item
-      );
-      setTodoList(nextTodoList);
-    }
-    setEdited(!edited);
-  };
-  const onClickDelBtn = () => {
-    if (window.confirm("삭제하시겠습니까?")) {
-      const nextTodoList = todoList.map((item) => ({
-        ...item,
-        deleted: item.id === todoItem.id ? true : item.deleted,
-      }));
-
-      setTodoList(nextTodoList);
-    }
-  };
   return (
-    <>
-      <TodoListSection>
-        <TodoItemSection>
-          <TodoCheck
-            type="checkbox"
-            checked={todoItem.checked}
-            onChange={onChangeCheckbox}
-          />
-          {edited ? (
-            <Todocontent
-              type="text"
-              value={newText}
-              ref={editInputRef}
-              onChange={onChangeEditInput}
-            />
-          ) : (
-            <TodoContent checked={todoItem.checked}>
-              {todoItem.text}
-            </TodoContent>
-          )}
-        </TodoItemSection>
-        <TodoBtn>
-          <EditBtn onClick={onClickEditBtn}>{edited ? "완료" : "수정"}</EditBtn>
-          <DelBtn onClick={onClickDelBtn}>삭제</DelBtn>
-        </TodoBtn>
-      </TodoListSection>
-    </>
+    <TodoList>
+      {Array.isArray(todos) && todos.length > 0 ? (
+        todos.map((todo) => (
+          <TodoItemWrapper key={todo.todo_id}>
+            {editTodoId === todo.todo_id ? (
+              <EditSection>
+                <EditInput
+                  type="text"
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                />
+                <EditButton onClick={() => handleSaveEdit(todo.todo_id)}>
+                  완료
+                </EditButton>
+                <CancelButton onClick={handleCancelEdit}>취소</CancelButton>
+              </EditSection>
+            ) : (
+              <DisplaySection>
+                <Checkbox
+                  type="checkbox"
+                  checked={todo.is_checked}
+                  onChange={() => handleComplete(todo.todo_id)}
+                />
+                <TodoContent>{todo.content}</TodoContent>
+                <EditButton onClick={() => handleEdit(todo)}>수정</EditButton>
+                <DeleteButton onClick={() => onDeleteTodo(todo.todo_id)}>
+                  삭제
+                </DeleteButton>
+              </DisplaySection>
+            )}
+          </TodoItemWrapper>
+        ))
+      ) : (
+        <NoTodos>TODO LIST가 아직 없습니다.</NoTodos>
+      )}
+    </TodoList>
   );
 };
 
 export default TodoItem;
 
-const TodoListSection = styled.section`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+const TodoList = styled.ul`
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+`;
+
+const TodoItemWrapper = styled.li`
+  margin-bottom: 10px;
+  /* padding: 10px; */
+  border-bottom: 1px solid #97b3b5;
   width: 1000px;
-  border-bottom: #97b3b5 solid 1px;
-  padding: 0px 10px 0px 10px;
-  margin-bottom: 5px;
 `;
-const TodoItemSection = styled.section`
+
+const EditSection = styled.div`
   display: flex;
+  align-items: center;
 `;
-const TodoCheck = styled.input`
-  background-color: aqua;
+
+const EditInput = styled.input`
+  flex: 1;
+  width: 500x;
+  height: 20px;
+  background-color: #fff;
+  color: #4e6466;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+`;
+
+const EditButton = styled.button`
+  background-color: #97b3b5;
+  color: #f5fffe;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-right: 5px;
+`;
+
+const CancelButton = styled.button`
+  background-color: #c3e1e3;
+  color: #4e6466;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+`;
+
+const DisplaySection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const UserName = styled.strong`
   margin-right: 10px;
 `;
-const TodoContent = styled.span`
+
+const TodoContent = styled.p`
   color: #4e6466;
+  flex: 1; /* to make sure TodoContent takes remaining space */
+`;
+
+const Checkbox = styled.input`
+  margin-right: 10px;
+`;
+
+const Emoji = styled.span`
+  margin-right: 10px;
+`;
+
+const Status = styled.span`
+  color: ${(props) => (props.checked ? "gray" : "#4e6466")};
   ${(props) =>
     props.checked &&
     css`
       text-decoration: line-through;
-      color: gray;
     `}
 `;
-const Todocontent = styled.input`
+
+const DeleteButton = styled.button`
+  background-color: #c3e1e3;
   color: #4e6466;
-`;
-const TodoBtn = styled.section`
-  display: flex;
-`;
-const EditBtn = styled.button`
-  border-radius: 10px;
-  background: #97b3b5;
-  margin-right: 5px;
-  font-size: 12px;
-  width: 55px;
-  height: 40px;
-  color: #f5fffe;
-  font-weight: 700;
-`;
-const DelBtn = styled.button`
-  border-radius: 10px;
-  background: #c3e1e3;
-  color: #4e6466;
-  font-size: 12px;
-  width: 55px;
-  height: 40px;
-  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 5px;
 `;
 
-TodoItem.propTypes = {
-  todoItem: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    text: PropTypes.string.isRequired,
-    checked: PropTypes.bool.isRequired, // 추가된 부분
-  }).isRequired,
-  todoList: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      text: PropTypes.string.isRequired,
-      checked: PropTypes.bool.isRequired, // 추가된 부분
-    })
-  ).isRequired,
-  setTodoList: PropTypes.func.isRequired,
-};
+const NoTodos = styled.p`
+  color: #4e6466;
+`;

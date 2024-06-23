@@ -23,18 +23,18 @@ export default function Login() {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   // 로그인 버튼 눌렀을 때
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
       const response = await axios.post(`${BASE_URL}/api/users/login`, {
-        username,
-        password,
+        username: username,
+        password: password,
       });
-
-      if (response.status === 200) {
-        navigate("/main");
-      }
+      const user_id = response.data.user_id;
+      localStorage.setItem("user_id", user_id); // user_id를 localStorage에 저장
+      navigate("/main"); // 메인 페이지로 이동
     } catch (error) {
-      console.log(error);
+      console.error("로그인 실패", error);
     }
   };
 
@@ -43,7 +43,7 @@ export default function Login() {
       <LoginWrap>
         <Wrapper>
           <Logo src={logo} alt="로고이미지" />
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Inputs>
               <Input
                 name="username"
@@ -63,7 +63,13 @@ export default function Login() {
             </Inputs>
             {/* 입력 됐을때만 버튼 누를 수 있도록  */}
             {username.length > 0 && password.length > 0 ? (
-              <Button type="submit" disabled={false}>
+              <Button
+                type="submit"
+                disabled={false}
+                onClick={(e) => {
+                  handleSubmit(e);
+                }}
+              >
                 로그인하기
               </Button>
             ) : (

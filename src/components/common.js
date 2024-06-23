@@ -91,16 +91,10 @@ export const Spring = styled.img`
 // 투두리스트 입력
 export const Wrap = styled.section`
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-`;
-export const GetWrap = styled.section`
-  display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  background-color: white;
+  justify-content: center;
+  align-items: flex-start;
+  height: 300px;
 `;
 
 export const ListGet = styled.input`

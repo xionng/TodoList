@@ -1,52 +1,52 @@
-// 투두리스트 입력받기
-import { Wrap, GetWrap, ListGet, InputBtn } from "./common.js";
-import React, { useState, useRef } from "react";
+import { Wrap, ListGet, InputBtn } from "./common.js";
+import React, { useState } from "react";
+import styled from "styled-components";
 import PropTypes from "prop-types";
 
-export default function TodoListGet({ todoList, setTodoList }) {
-  const [text, setText] = useState("");
-  const inputRef = useRef(null);
+const TodoListGet = ({ date, onAddTodo }) => {
+  const [newTodo, setNewTodo] = useState("");
 
-  const onChangeInput = (e) => {
-    setText(e.target.value);
-  };
-
-  const onClickAddBtn = () => {
-    const nextTodoList = todoList.concat({
-      id: todoList.length,
-      text,
-      checked: false,
-      deleted: false,
-    });
-    setTodoList(nextTodoList);
-
-    setText("");
-    inputRef.current.focus();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newTodo.trim()) {
+      onAddTodo({ date, content: newTodo, user_id: 1 }); // 예시로 user_id는 1로 설정
+      setNewTodo("");
+    }
   };
 
   return (
     <Wrap>
-      <GetWrap>
+      <TodoListHeader>{date.toDateString()}</TodoListHeader>
+      <TodoForm onSubmit={handleSubmit}>
         <ListGet
           type="text"
-          name="todoItem"
-          value={text}
-          ref={inputRef}
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
           placeholder="TODO LIST를 입력하세요"
-          onChange={onChangeInput}
         />
-        <InputBtn onClick={onClickAddBtn}>추가하기</InputBtn>
-      </GetWrap>
+        <InputBtn type="submit">추가하기</InputBtn>
+      </TodoForm>
     </Wrap>
   );
-}
+};
+
+export default TodoListGet;
+
+const TodoListHeader = styled.h2`
+  font-size: 18px;
+  font-weight: bold;
+  color: #4e6466;
+  margin-bottom: 10px;
+  margin-left: 10px;
+`;
+
+const TodoForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
 
 TodoListGet.propTypes = {
-  todoList: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      text: PropTypes.string.isRequired,
-    }).isRequired
-  ),
-  setTodoList: PropTypes.func.isRequired,
+  date: PropTypes.instanceOf(Date).isRequired,
+  onAddTodo: PropTypes.func.isRequired,
 };
