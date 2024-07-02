@@ -11,7 +11,7 @@ const Main = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const userId = localStorage.getItem("user_id");
   useEffect(() => {
-    fetchTodos(userId, selectedDate); // 초기 로딩 시 해당 사용자의 투두 리스트를 불러옵니다.
+    fetchTodos(userId, selectedDate); // 초기 로딩 시 해당 사용자의 투두 리스트를 불러옴
   }, [selectedDate]);
 
   // 투두 리스트 조회

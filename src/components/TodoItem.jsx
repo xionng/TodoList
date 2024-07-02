@@ -53,7 +53,7 @@ const TodoItem = ({
   const handleShowEmojiPicker = (todo_id) => {
     setShowEmojiPicker(todo_id);
   };
-  // 이모지 선택, 선택기 닫기
+  // 이모지 선택
   const handleSelectEmoji = (todo_id, emoji) => {
     onAddEmoji(todo_id, emoji);
     setShowEmojiPicker(null);
@@ -61,10 +61,11 @@ const TodoItem = ({
 
   return (
     <TodoList>
-      {Array.isArray(todos) && todos.length > 0 ? (
+      {Array.isArray(todos) && todos.length > 0 ? ( // 배열이 비어있지 않다면 todo를 map 함수로 반복하여 렌더링
         todos.map((todo) => (
           <TodoItemWrapper key={todo.todo_id}>
-            {editTodoId === todo.todo_id ? (
+            {editTodoId === todo.todo_id ? ( // editTodoId와 현재 할 일의 todo_id가 같다면
+              // 수정 모드
               <EditSection>
                 <EditInput
                   type="text"
@@ -77,6 +78,7 @@ const TodoItem = ({
                 <CancelButton onClick={handleCancelEdit}>취소</CancelButton>
               </EditSection>
             ) : (
+              // 일반 모드
               <DisplaySection>
                 <Checkbox
                   type="checkbox"
@@ -91,7 +93,7 @@ const TodoItem = ({
                   >
                     <EmojiAdd src={emojiAdd} alt="이모지 추가" />
                   </EmojiButton>
-                  {showEmojiPicker === todo.todo_id && (
+                  {showEmojiPicker === todo.todo_id && ( // 현재 할 일의 ID와 showEmojiPicker가 같다면
                     <EmojiPicker ref={emojiPickerRef}>
                       {["🌕", "🌖", "🌗", "🌘", "🌑"].map((emoji) => (
                         <EmojiOption
