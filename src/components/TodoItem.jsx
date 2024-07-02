@@ -1,31 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
-
-const TodoItem = ({ todos, onDeleteTodo, onCompleteTodo }) => {
+import PropTypes from "prop-types";
+import emojiAdd from "../assets/img/emojiAddpng.png";
+const TodoItem = ({
+  todos,
+  onDeleteTodo,
+  onCompleteTodo,
+  onUpdateTodo,
+  onAddEmoji,
+}) => {
   const [editTodoId, setEditTodoId] = useState(null);
   const [editContent, setEditContent] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(null);
+  const emojiPickerRef = useRef();
 
-  // 수정
+  // 이모지 선택기 외부를 클릭했을때 선택 창 닫기
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
+        setShowEmojiPicker(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  // 수정하기
   const handleEdit = (todo) => {
     setEditTodoId(todo.todo_id);
     setEditContent(todo.content);
   };
-
   // 수정(취소)
   const handleCancelEdit = () => {
     setEditTodoId(null);
     setEditContent("");
   };
-
   // 수정(완료)
-  const handleSaveEdit = (todo) => {
+  const handleSaveEdit = (todo_id) => {
+    onUpdateTodo(todo_id, { content: editContent });
     handleCancelEdit();
-    setEditContent(todo.content);
   };
-
-  // 완료 체크
-  const handleComplete = (todo_id) => {
-    onCompleteTodo(todo_id);
+  // 할 일 완료(체크박스)
+  const handleComplete = (todo) => {
+    onCompleteTodo(todo.todo_id, !todo.is_checked);
+  };
+  // 이모지 선택기 표시
+  const handleShowEmojiPicker = (todo_id) => {
+    setShowEmojiPicker(todo_id);
+  };
+  // 이모지 선택, 선택기 닫기
+  const handleSelectEmoji = (todo_id, emoji) => {
+    onAddEmoji(todo_id, emoji);
+    setShowEmojiPicker(null);
   };
 
   return (
@@ -50,9 +81,29 @@ const TodoItem = ({ todos, onDeleteTodo, onCompleteTodo }) => {
                 <Checkbox
                   type="checkbox"
                   checked={todo.is_checked}
-                  onChange={() => handleComplete(todo.todo_id)}
+                  onChange={() => handleComplete(todo)}
                 />
                 <TodoContent>{todo.content}</TodoContent>
+                <Emoji>{todo.emoji}</Emoji>
+                <EmojiButtonWrapper>
+                  <EmojiButton
+                    onClick={() => handleShowEmojiPicker(todo.todo_id)}
+                  >
+                    <EmojiAdd src={emojiAdd} alt="이모지 추가" />
+                  </EmojiButton>
+                  {showEmojiPicker === todo.todo_id && (
+                    <EmojiPicker ref={emojiPickerRef}>
+                      {["🌕", "🌖", "🌗", "🌘", "🌑"].map((emoji) => (
+                        <EmojiOption
+                          key={emoji}
+                          onClick={() => handleSelectEmoji(todo.todo_id, emoji)}
+                        >
+                          {emoji}
+                        </EmojiOption>
+                      ))}
+                    </EmojiPicker>
+                  )}
+                </EmojiButtonWrapper>
                 <EditButton onClick={() => handleEdit(todo)}>수정</EditButton>
                 <DeleteButton onClick={() => onDeleteTodo(todo.todo_id)}>
                   삭제
@@ -66,6 +117,21 @@ const TodoItem = ({ todos, onDeleteTodo, onCompleteTodo }) => {
       )}
     </TodoList>
   );
+};
+
+TodoItem.propTypes = {
+  todos: PropTypes.arrayOf(
+    PropTypes.shape({
+      todo_id: PropTypes.number.isRequired,
+      content: PropTypes.string.isRequired,
+      is_checked: PropTypes.bool.isRequired,
+      emoji: PropTypes.string,
+    })
+  ).isRequired,
+  onDeleteTodo: PropTypes.func.isRequired,
+  onCompleteTodo: PropTypes.func.isRequired,
+  onUpdateTodo: PropTypes.func.isRequired,
+  onAddEmoji: PropTypes.func.isRequired,
 };
 
 export default TodoItem;
@@ -118,10 +184,7 @@ const CancelButton = styled.button`
 const DisplaySection = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const UserName = styled.strong`
-  margin-right: 10px;
+  position: relative;
 `;
 
 const TodoContent = styled.p`
@@ -129,21 +192,13 @@ const TodoContent = styled.p`
   flex: 1;
 `;
 
+const Emoji = styled.span`
+  margin-left: 10px;
+  font-size: 20px;
+`;
+
 const Checkbox = styled.input`
   margin-right: 10px;
-`;
-
-const Emoji = styled.span`
-  margin-right: 10px;
-`;
-
-const Status = styled.span`
-  color: ${(props) => (props.checked ? "gray" : "#4e6466")};
-  ${(props) =>
-    props.checked &&
-    css`
-      text-decoration: line-through;
-    `}
 `;
 
 const DeleteButton = styled.button`
@@ -156,6 +211,41 @@ const DeleteButton = styled.button`
   margin-left: 5px;
 `;
 
+const EmojiButtonWrapper = styled.div`
+  position: relative;
+`;
+
+const EmojiButton = styled.button`
+  background-color: #fff;
+  color: #4e6466;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 5px;
+`;
+
+const EmojiPicker = styled.div`
+  position: absolute;
+  display: flex;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+const EmojiOption = styled.span`
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 20px;
+`;
+
+const EmojiAdd = styled.img`
+  width: 30px;
+`;
 const NoTodos = styled.p`
   color: #4e6466;
 `;

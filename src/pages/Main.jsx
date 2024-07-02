@@ -72,9 +72,11 @@ const Main = () => {
   };
 
   // 투두 완료 체크
-  const handleCompleteTodo = async (todo_id) => {
+  const handleCompleteTodo = async (todo_id, is_checked) => {
     try {
-      await axios.patch(`${BASE_URL}/api/todos/${userId}/${todo_id}/check`);
+      await axios.patch(`${BASE_URL}/api/todos/${userId}/${todo_id}/check`, {
+        is_checked,
+      });
       fetchTodos(userId, selectedDate); // 완료 체크 후 리스트 갱신
     } catch (error) {
       console.error("투두 완료 체크에 실패했습니다", error);
