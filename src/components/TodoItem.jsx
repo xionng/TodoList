@@ -72,10 +72,10 @@ const TodoItem = ({
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                 />
-                <EditButton onClick={() => handleSaveEdit(todo.todo_id)}>
+                <EditBtn onClick={() => handleSaveEdit(todo.todo_id)}>
                   완료
-                </EditButton>
-                <CancelButton onClick={handleCancelEdit}>취소</CancelButton>
+                </EditBtn>
+                <CancelBtn onClick={handleCancelEdit}>취소</CancelBtn>
               </EditSection>
             ) : (
               // 일반 모드
@@ -87,12 +87,10 @@ const TodoItem = ({
                 />
                 <TodoContent>{todo.content}</TodoContent>
                 <Emoji>{todo.emoji}</Emoji>
-                <EmojiButtonWrapper>
-                  <EmojiButton
-                    onClick={() => handleShowEmojiPicker(todo.todo_id)}
-                  >
+                <EmojiBtnWrapper>
+                  <EmojiBtn onClick={() => handleShowEmojiPicker(todo.todo_id)}>
                     <EmojiAdd src={emojiAdd} alt="이모지 추가" />
-                  </EmojiButton>
+                  </EmojiBtn>
                   {showEmojiPicker === todo.todo_id && ( // 현재 할 일의 ID와 showEmojiPicker가 같다면
                     <EmojiPicker ref={emojiPickerRef}>
                       {["🌕", "🌖", "🌗", "🌘", "🌑"].map((emoji) => (
@@ -105,11 +103,11 @@ const TodoItem = ({
                       ))}
                     </EmojiPicker>
                   )}
-                </EmojiButtonWrapper>
-                <EditButton onClick={() => handleEdit(todo)}>수정</EditButton>
-                <DeleteButton onClick={() => onDeleteTodo(todo.todo_id)}>
+                </EmojiBtnWrapper>
+                <EditBtn onClick={() => handleEdit(todo)}>수정</EditBtn>
+                <DeleteBtn onClick={() => onDeleteTodo(todo.todo_id)}>
                   삭제
-                </DeleteButton>
+                </DeleteBtn>
               </DisplaySection>
             )}
           </TodoItemWrapper>
@@ -158,7 +156,7 @@ const EditSection = styled.div`
 const EditInput = styled.input`
   flex: 1;
   width: 500px;
-  height: 20px;
+  height: 35px;
   background-color: #fff;
   color: #4e6466;
   margin-right: 10px;
@@ -166,21 +164,26 @@ const EditInput = styled.input`
   border-radius: 10px;
 `;
 
-const EditButton = styled.button`
+const EditBtn = styled.button`
   background-color: #97b3b5;
   color: #f5fffe;
+  font-size: 15px;
+  font-weight: 700;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
   margin-right: 5px;
 `;
 
-const CancelButton = styled.button`
+const CancelBtn = styled.button`
   background-color: #c3e1e3;
   color: #4e6466;
+  font-size: 15px;
+  font-weight: 700;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
+  margin-left: 5px;
 `;
 
 const DisplaySection = styled.div`
@@ -203,27 +206,26 @@ const Checkbox = styled.input`
   margin-right: 10px;
 `;
 
-const DeleteButton = styled.button`
+const DeleteBtn = styled.button`
   background-color: #c3e1e3;
   color: #4e6466;
+  font-size: 15px;
+  font-weight: 700;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
-  cursor: pointer;
   margin-left: 5px;
 `;
 
-const EmojiButtonWrapper = styled.div`
+const EmojiBtnWrapper = styled.div`
   position: relative;
 `;
 
-const EmojiButton = styled.button`
+const EmojiBtn = styled.button`
   background-color: #fff;
-  color: #4e6466;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
-  cursor: pointer;
   margin-left: 5px;
 `;
 
@@ -236,11 +238,12 @@ const EmojiPicker = styled.div`
   padding: 5px;
   margin-top: 5px;
   left: 50%;
+  top: -100%;
+  cursor: pointer;
   transform: translateX(-50%);
 `;
 
 const EmojiOption = styled.span`
-  cursor: pointer;
   margin: 0 5px;
   font-size: 20px;
 `;

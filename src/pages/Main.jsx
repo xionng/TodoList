@@ -153,11 +153,15 @@ const ListWrap = styled.section`
   border: 10px solid #c3e1e3;
   background: #fff;
   width: 1180px;
-  height: 340px;
+  min-height: 340px; // 최소 사이즈 지정
+  overflow: hidden; // 사이즈 자동 조절
+  height: auto;
+
   margin-top: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 20px;
 `;
 
 const Title = styled.h1`
