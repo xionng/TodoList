@@ -31,7 +31,7 @@ export default function Login() {
         password: password,
       });
       const user_id = response.data.user_id;
-      localStorage.setItem("user_id", user_id); // user_id를 localStorage에 저장
+      localStorage.setItem("user_id", user_id);
       navigate("/main"); // 메인 페이지로 이동
     } catch (error) {
       console.error("로그인 실패", error);

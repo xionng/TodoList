@@ -8,11 +8,10 @@ import axios from "axios";
 const Main = () => {
   const [todoList, setTodoList] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const user_id = 1;
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-
+  const userId = localStorage.getItem("user_id");
   useEffect(() => {
-    fetchTodos(user_id, selectedDate); // 초기 로딩 시 해당 사용자의 투두 리스트를 불러옵니다.
+    fetchTodos(userId, selectedDate); // 초기 로딩 시 해당 사용자의 투두 리스트를 불러옵니다.
   }, [selectedDate]);
 
   // 투두 리스트 조회
@@ -20,12 +19,15 @@ const Main = () => {
     const month = date.getMonth() + 1; // 월은 0부터 시작하므로 +1
     const day = date.getDate();
     try {
-      const response = await axios.get(`${BASE_URL}/api/todos/${user_id}`, {
-        params: {
-          month: month,
-          day: day,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/todos/${user_id}?month=${month}&day=${day}`,
+        {
+          params: {
+            month: month,
+            day: day,
+          },
+        }
+      );
       const data = Array.isArray(response.data) ? response.data : [];
       setTodoList(data);
     } catch (error) {
@@ -37,11 +39,11 @@ const Main = () => {
   // 투두 추가
   const handleAddTodo = async (todo) => {
     try {
-      await axios.post(`${BASE_URL}/api/todos/${user_id}`, {
+      await axios.post(`${BASE_URL}/api/todos/${userId}`, {
         date: todo.date,
         content: todo.content,
       });
-      fetchTodos(user_id, selectedDate);
+      fetchTodos(userId, selectedDate);
     } catch (error) {
       console.error("투두 추가에 실패했습니다", error);
     }
@@ -50,10 +52,10 @@ const Main = () => {
   // 투두 수정
   const handleUpdateTodo = async (todo_id, updatedTodo) => {
     try {
-      await axios.put(`${BASE_URL}/api/todos/${user_id}/${todo_id}`, {
+      await axios.patch(`${BASE_URL}/api/todos/${userId}/${todo_id}`, {
         content: updatedTodo.content,
       });
-      fetchTodos(user_id, selectedDate); // 수정 후 리스트 갱신
+      fetchTodos(userId, selectedDate); // 수정 후 리스트 갱신
     } catch (error) {
       console.error("투두 수정에 실패했습니다", error);
     }
@@ -62,8 +64,8 @@ const Main = () => {
   // 투두 삭제
   const handleDeleteTodo = async (plan_id) => {
     try {
-      await axios.delete(`${BASE_URL}/api/todos/${user_id}/${plan_id}`);
-      fetchTodos(user_id, selectedDate); // 삭제 후 리스트 갱신
+      await axios.delete(`${BASE_URL}/api/todos/${userId}/${plan_id}`);
+      fetchTodos(userId, selectedDate); // 삭제 후 리스트 갱신
     } catch (error) {
       console.error("투두 삭제에 실패했습니다", error);
     }
@@ -72,8 +74,8 @@ const Main = () => {
   // 투두 완료 체크
   const handleCompleteTodo = async (todo_id) => {
     try {
-      await axios.put(`${BASE_URL}/api/todos/${user_id}/${todo_id}/check`);
-      fetchTodos(user_id, selectedDate); // 완료 체크 후 리스트 갱신
+      await axios.patch(`${BASE_URL}/api/todos/${userId}/${todo_id}/check`);
+      fetchTodos(userId, selectedDate); // 완료 체크 후 리스트 갱신
     } catch (error) {
       console.error("투두 완료 체크에 실패했습니다", error);
     }
@@ -82,10 +84,10 @@ const Main = () => {
   // 이모지 추가
   const handleAddEmoji = async (todo_id, emoji) => {
     try {
-      await axios.post(`${BASE_URL}/api/todos/${user_id}/${todo_id}/reviews`, {
+      await axios.patch(`${BASE_URL}/api/todos/${userId}/${todo_id}/reviews`, {
         emoji: emoji,
       });
-      fetchTodos(user_id, selectedDate); // 이모지 등록 후 리스트 갱신
+      fetchTodos(userId, selectedDate); // 이모지 등록 후 리스트 갱신
     } catch (error) {
       console.error("이모지 추가에 실패했습니다", error);
     }

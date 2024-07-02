@@ -4,20 +4,25 @@ import styled, { css } from "styled-components";
 const TodoItem = ({ todos, onDeleteTodo, onCompleteTodo }) => {
   const [editTodoId, setEditTodoId] = useState(null);
   const [editContent, setEditContent] = useState("");
+
   // 수정
   const handleEdit = (todo) => {
     setEditTodoId(todo.todo_id);
     setEditContent(todo.content);
   };
+
   // 수정(취소)
   const handleCancelEdit = () => {
     setEditTodoId(null);
     setEditContent("");
   };
+
   // 수정(완료)
-  const handleSaveEdit = (todo_id) => {
-    handleCancelEdit(todo_id);
+  const handleSaveEdit = (todo) => {
+    handleCancelEdit();
+    setEditContent(todo.content);
   };
+
   // 완료 체크
   const handleComplete = (todo_id) => {
     onCompleteTodo(todo_id);
@@ -73,7 +78,6 @@ const TodoList = styled.ul`
 
 const TodoItemWrapper = styled.li`
   margin-bottom: 10px;
-  /* padding: 10px; */
   border-bottom: 1px solid #97b3b5;
   width: 1000px;
 `;
@@ -85,7 +89,7 @@ const EditSection = styled.div`
 
 const EditInput = styled.input`
   flex: 1;
-  width: 500x;
+  width: 500px;
   height: 20px;
   background-color: #fff;
   color: #4e6466;
@@ -122,7 +126,7 @@ const UserName = styled.strong`
 
 const TodoContent = styled.p`
   color: #4e6466;
-  flex: 1; /* to make sure TodoContent takes remaining space */
+  flex: 1;
 `;
 
 const Checkbox = styled.input`

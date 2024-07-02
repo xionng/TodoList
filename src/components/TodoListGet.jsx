@@ -9,7 +9,7 @@ const TodoListGet = ({ date, onAddTodo }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newTodo.trim()) {
-      onAddTodo({ date, content: newTodo, user_id: 1 }); // 예시로 user_id는 1로 설정
+      onAddTodo({ date, content: newTodo });
       setNewTodo("");
     }
   };
