@@ -21,8 +21,19 @@ export default function CalendarSection({ onDateChange }) {
     return "";
   };
 
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const todo_id = event.dataTransfer.getData("todo_id"); // 드래그된 투두의 ID 가져오기
+    if (todo_id) {
+      onDateChange(value, todo_id); // 선택한 날짜와 투두 ID로 날짜 변경 함수 호출
+    }
+  };
+
   return (
-    <CalendarWrap>
+    <CalendarWrap
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={handleDrop} // 드롭 이벤트 핸들러 수정
+    >
       <CalendarBox
         locale="en"
         onChange={changeDate}

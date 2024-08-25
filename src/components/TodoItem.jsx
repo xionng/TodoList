@@ -59,11 +59,25 @@ const TodoItem = ({
     setShowEmojiPicker(null);
   };
 
+  // 드래그
+  const handleDragStart = (event, todo) => {
+    event.dataTransfer.setData("todo_id", todo.todo_id);
+  };
+
+  const handleDrop = (event, date) => {
+    const todo_id = event.dataTransfer.getData("todo_id");
+    onUpdateTodo(todo_id, { date: date.toISOString().split("T")[0] });
+  };
+
   return (
     <TodoList>
       {Array.isArray(todos) && todos.length > 0 ? ( // 배열이 비어있지 않다면 todo를 map 함수로 반복하여 렌더링
         todos.map((todo) => (
-          <TodoItemWrapper key={todo.todo_id}>
+          <TodoItemWrapper
+            key={todo.todo_id}
+            draggable
+            onDragStart={(event) => handleDragStart(event, todo)}
+          >
             {editTodoId === todo.todo_id ? ( // editTodoId와 현재 할 일의 todo_id가 같다면
               // 수정 모드
               <EditSection>

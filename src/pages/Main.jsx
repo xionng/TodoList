@@ -96,8 +96,11 @@ const Main = () => {
   };
 
   // 날짜 변경 처리
-  const handleDateChange = (date) => {
+  const handleDateChange = (date, todo_id) => {
     setSelectedDate(date);
+    if (todo_id) {
+      handleUpdateTodo(todo_id, { date: date.toISOString().split("T")[0] });
+    }
   };
 
   return (
