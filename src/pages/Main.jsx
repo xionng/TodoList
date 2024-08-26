@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Calendar from "../components/CalendarSection";
+import CalendarSection from "../components/CalendarSection";
 import TodoItem from "../components/TodoItem";
 import TodoListGet from "../components/TodoListGet";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -10,6 +11,7 @@ const Main = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const userId = localStorage.getItem("user_id");
+
   useEffect(() => {
     fetchTodos(userId, selectedDate); // 초기 로딩 시 해당 사용자의 투두 리스트를 불러옴
   }, [selectedDate]);
@@ -20,13 +22,7 @@ const Main = () => {
     const day = date.getDate();
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/todos/${user_id}?month=${month}&day=${day}`,
-        {
-          params: {
-            month: month,
-            day: day,
-          },
-        }
+        `${BASE_URL}/api/todos/${user_id}?month=${month}&day=${day}`
       );
       const data = Array.isArray(response.data) ? response.data : [];
       setTodoList(data);
@@ -54,6 +50,7 @@ const Main = () => {
     try {
       await axios.patch(`${BASE_URL}/api/todos/${userId}/${todo_id}`, {
         content: updatedTodo.content,
+        date: updatedTodo.date,
       });
       fetchTodos(userId, selectedDate); // 수정 후 리스트 갱신
     } catch (error) {
@@ -103,24 +100,46 @@ const Main = () => {
     }
   };
 
+  // 드래그 앤 드롭 처리
+  const onDragEnd = (result) => {
+    const { destination, draggableId } = result;
+
+    if (!destination) return;
+
+    const todo_id = draggableId;
+    const newDate = destination.droppableId; // 달력 날짜에서 droppableId로 새로운 날짜 가져오기
+
+    handleUpdateTodo(todo_id, { date: newDate });
+  };
+
   return (
     <MainWrap>
       <MainTop>
-        <Calendar onDateChange={handleDateChange} />
+        <CalendarSection
+          onDateChange={handleDateChange}
+          selectedDate={selectedDate}
+        />
         <EditWrap>
           <TodoListGet date={selectedDate} onAddTodo={handleAddTodo} />
         </EditWrap>
       </MainTop>
-      <ListWrap>
-        <Title>TODO.</Title>
-        <TodoItem
-          todos={todoList} // todoList를 todos props로 전달
-          onUpdateTodo={handleUpdateTodo}
-          onDeleteTodo={handleDeleteTodo}
-          onCompleteTodo={handleCompleteTodo}
-          onAddEmoji={handleAddEmoji}
-        />
-      </ListWrap>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId={selectedDate.toISOString().split("T")[0]}>
+          {(provided) => (
+            <ListWrap ref={provided.innerRef} {...provided.droppableProps}>
+              <Title>TODO.</Title>
+              <TodoItem
+                todos={todoList}
+                onUpdateTodo={handleUpdateTodo}
+                onDeleteTodo={handleDeleteTodo}
+                onCompleteTodo={handleCompleteTodo}
+                onAddEmoji={handleAddEmoji}
+              />
+              {provided.placeholder}
+            </ListWrap>
+          )}
+        </Droppable>
+      </DragDropContext>
     </MainWrap>
   );
 };
@@ -156,10 +175,9 @@ const ListWrap = styled.section`
   border: 10px solid #c3e1e3;
   background: #fff;
   width: 1180px;
-  min-height: 340px; // 최소 사이즈 지정
-  overflow: hidden; // 사이즈 자동 조절
+  min-height: 340px;
+  overflow: hidden;
   height: auto;
-
   margin-top: 25px;
   display: flex;
   flex-direction: column;

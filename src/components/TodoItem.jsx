@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import PropTypes from "prop-types";
+import { Draggable } from "react-beautiful-dnd";
 import emojiAdd from "../assets/img/emojiAddpng.png";
+
 const TodoItem = ({
   todos,
   onDeleteTodo,
@@ -14,7 +16,6 @@ const TodoItem = ({
   const [showEmojiPicker, setShowEmojiPicker] = useState(null);
   const emojiPickerRef = useRef();
 
-  // 이모지 선택기 외부를 클릭했을때 선택 창 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -30,104 +31,104 @@ const TodoItem = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  // 수정하기
+
   const handleEdit = (todo) => {
     setEditTodoId(todo.todo_id);
     setEditContent(todo.content);
   };
-  // 수정(취소)
+
   const handleCancelEdit = () => {
     setEditTodoId(null);
     setEditContent("");
   };
-  // 수정(완료)
+
   const handleSaveEdit = (todo_id) => {
     onUpdateTodo(todo_id, { content: editContent });
     handleCancelEdit();
   };
-  // 할 일 완료(체크박스)
+
   const handleComplete = (todo) => {
     onCompleteTodo(todo.todo_id, !todo.is_checked);
   };
-  // 이모지 선택기 표시
+
   const handleShowEmojiPicker = (todo_id) => {
     setShowEmojiPicker(todo_id);
   };
-  // 이모지 선택
+
   const handleSelectEmoji = (todo_id, emoji) => {
     onAddEmoji(todo_id, emoji);
     setShowEmojiPicker(null);
   };
 
-  // 드래그
-  const handleDragStart = (event, todo) => {
-    event.dataTransfer.setData("todo_id", todo.todo_id);
-  };
-
-  const handleDrop = (event, date) => {
-    const todo_id = event.dataTransfer.getData("todo_id");
-    onUpdateTodo(todo_id, { date: date.toISOString().split("T")[0] });
-  };
-
   return (
     <TodoList>
-      {Array.isArray(todos) && todos.length > 0 ? ( // 배열이 비어있지 않다면 todo를 map 함수로 반복하여 렌더링
-        todos.map((todo) => (
-          <TodoItemWrapper
+      {Array.isArray(todos) && todos.length > 0 ? (
+        todos.map((todo, index) => (
+          <Draggable
             key={todo.todo_id}
-            draggable
-            onDragStart={(event) => handleDragStart(event, todo)}
+            draggableId={todo.todo_id.toString()}
+            index={index}
           >
-            {editTodoId === todo.todo_id ? ( // editTodoId와 현재 할 일의 todo_id가 같다면
-              // 수정 모드
-              <EditSection>
-                <EditInput
-                  type="text"
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                />
-                <EditBtn onClick={() => handleSaveEdit(todo.todo_id)}>
-                  완료
-                </EditBtn>
-                <CancelBtn onClick={handleCancelEdit}>취소</CancelBtn>
-              </EditSection>
-            ) : (
-              // 일반 모드
-              <DisplaySection>
-                <Checkbox
-                  type="checkbox"
-                  checked={todo.is_checked}
-                  onChange={() => handleComplete(todo)}
-                />
-                <TodoContent>{todo.content}</TodoContent>
-                <Emoji>{todo.emoji}</Emoji>
-                <EmojiBtnWrapper>
-                  <EmojiBtn onClick={() => handleShowEmojiPicker(todo.todo_id)}>
-                    <EmojiAdd src={emojiAdd} alt="이모지 추가" />
-                  </EmojiBtn>
-                  {showEmojiPicker === todo.todo_id && ( // 현재 할 일의 ID와 showEmojiPicker가 같다면
-                    <EmojiPicker ref={emojiPickerRef}>
-                      {["🌕", "🌖", "🌗", "🌘", "🌑"].map((emoji) => (
-                        <EmojiOption
-                          key={emoji}
-                          onClick={() => handleSelectEmoji(todo.todo_id, emoji)}
-                        >
-                          {emoji}
-                        </EmojiOption>
-                      ))}
-                    </EmojiPicker>
-                  )}
-                </EmojiBtnWrapper>
-                <EditBtn onClick={() => handleEdit(todo)}>수정</EditBtn>
-                <DeleteBtn onClick={() => onDeleteTodo(todo.todo_id)}>
-                  삭제
-                </DeleteBtn>
-              </DisplaySection>
+            {(provided) => (
+              <TodoItemWrapper
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+              >
+                {editTodoId === todo.todo_id ? (
+                  <EditSection>
+                    <EditInput
+                      type="text"
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                    />
+                    <EditBtn onClick={() => handleSaveEdit(todo.todo_id)}>
+                      완료
+                    </EditBtn>
+                    <CancelBtn onClick={handleCancelEdit}>취소</CancelBtn>
+                  </EditSection>
+                ) : (
+                  <DisplaySection>
+                    <Checkbox
+                      type="checkbox"
+                      checked={todo.is_checked}
+                      onChange={() => handleComplete(todo)}
+                    />
+                    <TodoContent>{todo.content}</TodoContent>
+                    <Emoji>{todo.emoji}</Emoji>
+                    <EmojiBtnWrapper>
+                      <EmojiBtn
+                        onClick={() => handleShowEmojiPicker(todo.todo_id)}
+                      >
+                        <EmojiAdd src={emojiAdd} alt="이모지 추가" />
+                      </EmojiBtn>
+                      {showEmojiPicker === todo.todo_id && (
+                        <EmojiPicker ref={emojiPickerRef}>
+                          {["🌕", "🌖", "🌗", "🌘", "🌑"].map((emoji) => (
+                            <EmojiOption
+                              key={emoji}
+                              onClick={() =>
+                                handleSelectEmoji(todo.todo_id, emoji)
+                              }
+                            >
+                              {emoji}
+                            </EmojiOption>
+                          ))}
+                        </EmojiPicker>
+                      )}
+                    </EmojiBtnWrapper>
+                    <EditBtn onClick={() => handleEdit(todo)}>수정</EditBtn>
+                    <DeleteBtn onClick={() => onDeleteTodo(todo.todo_id)}>
+                      삭제
+                    </DeleteBtn>
+                  </DisplaySection>
+                )}
+              </TodoItemWrapper>
             )}
-          </TodoItemWrapper>
+          </Draggable>
         ))
       ) : (
-        <NoTodos>TODO LIST가 아직 없습니다.</NoTodos>
+        <EmptyList>등록된 할 일이 없습니다.</EmptyList>
       )}
     </TodoList>
   );
@@ -137,6 +138,7 @@ TodoItem.propTypes = {
   todos: PropTypes.arrayOf(
     PropTypes.shape({
       todo_id: PropTypes.number.isRequired,
+      date: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
       is_checked: PropTypes.bool.isRequired,
       emoji: PropTypes.string,
@@ -267,4 +269,9 @@ const EmojiAdd = styled.img`
 `;
 const NoTodos = styled.p`
   color: #4e6466;
+`;
+const EmptyList = styled.div`
+  text-align: center;
+  color: gray;
+  margin-top: 20px;
 `;
