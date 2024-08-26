@@ -128,7 +128,7 @@ const TodoItem = ({
           </Draggable>
         ))
       ) : (
-        <EmptyList>등록된 할 일이 없습니다.</EmptyList>
+        <EmptyList>TODO LIST가 아직 없습니다.</EmptyList>
       )}
     </TodoList>
   );
@@ -272,6 +272,6 @@ const NoTodos = styled.p`
 `;
 const EmptyList = styled.div`
   text-align: center;
-  color: gray;
+  color: #4e6466;
   margin-top: 20px;
 `;
