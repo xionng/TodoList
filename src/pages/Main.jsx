@@ -9,11 +9,13 @@ import axios from "axios";
 const Main = () => {
   const [todoList, setTodoList] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [droppableIds, setDroppableIds] = useState([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
-    fetchTodos(userId, selectedDate); // 초기 로딩 시 해당 사용자의 투두 리스트를 불러옴
+    fetchTodos(userId, selectedDate);
+    updateDroppableIds();
   }, [selectedDate]);
 
   // 투두 리스트 조회
@@ -93,38 +95,57 @@ const Main = () => {
   };
 
   // 날짜 변경 처리
-  const handleDateChange = (date, todo_id) => {
-    setSelectedDate(date);
-    if (todo_id) {
-      handleUpdateTodo(todo_id, { date: date.toISOString().split("T")[0] });
+  const updateDroppableIds = () => {
+    const newDroppableIds = [];
+    const daysInMonth = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + 1,
+      0
+    ).getDate();
+    for (let day = 1; day <= daysInMonth; day++) {
+      newDroppableIds.push(`droppable-date-${day}`);
     }
+    setDroppableIds(newDroppableIds);
   };
 
-  // 드래그 앤 드롭 처리
+  const handleDateChange = (date, todoId = null) => {
+    if (todoId) {
+      handleUpdateTodo(todoId, { date: date.toISOString().split("T")[0] });
+    }
+    setSelectedDate(date);
+  };
+
   const onDragEnd = (result) => {
     const { destination, draggableId } = result;
 
     if (!destination) return;
 
-    const todo_id = draggableId;
-    const newDate = destination.droppableId; // 달력 날짜에서 droppableId로 새로운 날짜 가져오기
-
-    handleUpdateTodo(todo_id, { date: newDate });
+    const dateString = destination.droppableId.replace("droppable-date-", "");
+    const newDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      dateString
+    );
+    handleUpdateTodo(draggableId, {
+      date: newDate.toISOString().split("T")[0],
+    });
+    fetchTodos(userId, newDate);
   };
 
   return (
     <MainWrap>
-      <MainTop>
-        <CalendarSection
-          onDateChange={handleDateChange}
-          selectedDate={selectedDate}
-        />
-        <EditWrap>
-          <TodoListGet date={selectedDate} onAddTodo={handleAddTodo} />
-        </EditWrap>
-      </MainTop>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId={selectedDate.toISOString().split("T")[0]}>
+        <MainTop>
+          <CalendarSection
+            onDateChange={handleDateChange}
+            selectedDate={selectedDate}
+          />
+          <EditWrap>
+            <TodoListGet date={selectedDate} onAddTodo={handleAddTodo} />
+          </EditWrap>
+        </MainTop>
+
+        <Droppable droppableId={`droppable-date-${selectedDate.getDate()}`}>
           {(provided) => (
             <ListWrap ref={provided.innerRef} {...provided.droppableProps}>
               <Title>TODO.</Title>
@@ -139,6 +160,20 @@ const Main = () => {
             </ListWrap>
           )}
         </Droppable>
+
+        {droppableIds.map((id) => (
+          <Droppable key={id} droppableId={id}>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={{ display: "none" }}
+              >
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        ))}
       </DragDropContext>
     </MainWrap>
   );

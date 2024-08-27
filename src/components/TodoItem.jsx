@@ -162,6 +162,8 @@ const TodoItemWrapper = styled.li`
   margin-bottom: 10px;
   border-bottom: 1px solid #97b3b5;
   width: 1000px;
+  list-style: none;
+  background-color: #fff;
 `;
 
 const EditSection = styled.div`

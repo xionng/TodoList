@@ -1,55 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css";
+import { Droppable } from "react-beautiful-dnd";
 
-export default function CalendarSection({ onDateChange }) {
+export default function CalendarSection({ onDateChange, selectedDate }) {
   const [value, setValue] = useState(new Date());
 
+  useEffect(() => {
+    setValue(selectedDate);
+  }, [selectedDate]);
+
   const changeDate = (date) => {
-    setValue(date); // 선택된 마지막 날짜로 상태 업데이트
+    setValue(date);
     onDateChange(date);
   };
 
-  const tileClassName = ({ date }) => {
-    if (date.getDay() === 6) {
-      return "saturday";
-    }
-    if (date.getDay() === 0) {
-      return "sunday";
-    }
-    return "";
-  };
   const handleDrop = (event, date) => {
     event.preventDefault();
-    const todo_id = event.dataTransfer.getData("todo_id"); // 드래그된 투두의 ID 가져오기
-
-    onDateChange(date); // 이 부분에 선택한 날짜로 투두 이동 API 호출
+    const todoId = event.dataTransfer.getData("todoId");
+    if (todoId) {
+      onDateChange(date, todoId);
+    }
   };
+
+  const getDroppableId = (date) => `droppable-date-${date.getDate()}`;
+
   return (
-    <CalendarWrap
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={(e) => handleDrop(e, value)} // 드롭 이벤트 핸들러 추가
-    >
-      <CalendarBox
-        locale="en"
-        onChange={changeDate}
-        value={value}
-        formatDay={(value, date) =>
-          date.toLocaleString("en", { day: "numeric" })
-        }
-        tileClassName={tileClassName}
-        showNeighboringMonth={false}
-        selectRange={false}
-        prevLabel={"❮"}
-        nextLabel={"❯"}
-        next2Label={null}
-        prev2Label={null}
-      />
-    </CalendarWrap>
+    <Droppable droppableId={getDroppableId(value)}>
+      {(provided) => (
+        <CalendarWrap
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+          onDrop={(e) => handleDrop(e, value)}
+          onDragOver={(e) => e.preventDefault()} // Prevent default behavior
+        >
+          <CalendarBox
+            locale="en"
+            onChange={changeDate}
+            value={value}
+            formatDay={(value, date) =>
+              date.toLocaleString("en", { day: "numeric" })
+            }
+            showNeighboringMonth={false}
+            selectRange={false}
+            prevLabel={"❮"}
+            nextLabel={"❯"}
+            next2Label={null}
+            prev2Label={null}
+          />
+          {provided.placeholder}
+        </CalendarWrap>
+      )}
+    </Droppable>
   );
 }
-
 export const CalendarWrap = styled.div`
   border-radius: 30px;
   border: 10px solid #c3e1e3;
